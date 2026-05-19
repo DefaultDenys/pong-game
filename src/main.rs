@@ -2,13 +2,14 @@ use macroquad::prelude::*;
 
 use paddle::Paddle;
 
+mod ball;
 mod paddle;
 
 #[macroquad::main("Pong")]
 async fn main() {
     let mut left_paddle = Paddle::new(20.0, 150.0);
     let mut right_paddle = Paddle::new(750.0, 150.0);
-
+    let mut ball = ball::Ball::new(400.0, 300.0);
     loop {
         clear_background(BLACK);
         // Game logic and rendering code would go here
@@ -33,6 +34,7 @@ async fn main() {
 
         left_paddle.draw();
         right_paddle.draw();
+        ball.draw();
 
         next_frame().await;
     }
