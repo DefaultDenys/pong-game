@@ -20,4 +20,12 @@ impl Paddle {
     pub fn draw(&self) {
         draw_rectangle(self.x, self.y, self.width, self.height, WHITE);
     }
+
+    pub fn move_up(&mut self) {
+        self.y -= 5.0;
+    }
+
+    pub fn move_down(&mut self) {
+        self.y += 5.0;
+    }
 }
