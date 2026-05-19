@@ -30,11 +30,14 @@ async fn main() {
             right_paddle.move_down();
         }
 
-        ball.update();
-
         left_paddle.draw();
         right_paddle.draw();
         ball.draw();
+
+        ball.update();
+
+        ball.check_paddle_collision(&left_paddle);
+        ball.check_paddle_collision(&right_paddle);
 
         next_frame().await;
     }
