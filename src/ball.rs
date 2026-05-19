@@ -1,46 +1,42 @@
-use macroquad::{color::WHITE, shapes::draw_circle, window::screen_height};
+use macroquad::{color::WHITE, math::Circle, shapes::draw_circle, window::screen_height};
 
 use crate::paddle::Paddle;
 
 pub struct Ball {
-    x: f32,
-    y: f32,
+    bounds: Circle,
     velocity_x: f32,
     velocity_y: f32,
-    radius: f32,
 }
 
 impl Ball {
     pub fn new(x: f32, y: f32) -> Self {
         Self {
-            x,
-            y,
-            velocity_x: 4.0,
-            velocity_y: 4.0,
-            radius: 10.0,
+            bounds: Circle::new(x, y, 10.0),
+            velocity_x: 150.0,
+            velocity_y: 150.0,
         }
     }
 
-    pub fn draw(&self) {
-        draw_circle(self.x, self.y, self.radius, WHITE);
+    pub fn bounds(&self) -> &Circle {
+        &self.bounds
     }
 
-    pub fn update(&mut self) {
-        self.x += self.velocity_x;
-        self.y += self.velocity_y;
+    pub fn draw(&self) {
+        draw_circle(self.bounds.x, self.bounds.y, self.bounds.r, WHITE);
+    }
 
-        if self.y - self.radius <= 0.0 || self.y + self.radius >= screen_height() {
+    pub fn update(&mut self, delta_time: f32) {
+        self.bounds.x += self.velocity_x * delta_time;
+        self.bounds.y += self.velocity_y * delta_time;
+
+        if self.bounds.y - self.bounds.r <= 0.0 || self.bounds.y + self.bounds.r >= screen_height()
+        {
             self.velocity_y = -self.velocity_y;
         }
     }
 
     pub fn check_paddle_collision(&mut self, paddle: &Paddle) {
-        let paddle_bounds = paddle.get_bounds();
-        if self.x - self.radius <= paddle_bounds.x + paddle_bounds.w
-            && self.x + self.radius >= paddle_bounds.x
-            && self.y >= paddle_bounds.y
-            && self.y <= paddle_bounds.y + paddle_bounds.h
-        {
+        if self.bounds().overlaps_rect(&paddle.bounds()) {
             self.velocity_x = -self.velocity_x;
         }
     }

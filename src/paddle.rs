@@ -1,34 +1,58 @@
-use macroquad::{color::WHITE, math::Rect, shapes::draw_rectangle};
+use macroquad::{
+    color::WHITE,
+    input::{KeyCode, is_key_down},
+    math::Rect,
+    shapes::draw_rectangle,
+    window::screen_height,
+};
 
+pub struct ControlKeys {
+    pub up: KeyCode,
+    pub down: KeyCode,
+}
 pub struct Paddle {
-    x: f32,
-    y: f32,
-    width: f32,
-    height: f32,
+    bounds: Rect,
+    control_keys: ControlKeys,
 }
 impl Paddle {
-    pub fn new(x: f32, y: f32) -> Self {
+    fn move_up(&mut self, delta_time: f32) {
+        self.bounds.y -= 300.0 * delta_time;
+    }
+
+    fn move_down(&mut self, delta_time: f32) {
+        self.bounds.y += 300.0 * delta_time;
+    }
+
+    pub fn new(x: f32, y: f32, control_keys: ControlKeys) -> Self {
         Self {
-            x,
-            y,
-            width: 15.0,
-            height: 80.0,
+            bounds: Rect::new(x, y, 15.0, 80.0),
+            control_keys,
         }
     }
 
+    pub fn bounds(&self) -> &Rect {
+        &self.bounds
+    }
+
     pub fn draw(&self) {
-        draw_rectangle(self.x, self.y, self.width, self.height, WHITE);
+        draw_rectangle(
+            self.bounds.x,
+            self.bounds.y,
+            self.bounds.w,
+            self.bounds.h,
+            WHITE,
+        );
     }
 
-    pub fn move_up(&mut self) {
-        self.y -= 5.0;
-    }
+    pub fn update(&mut self, delta_time: f32) {
+        if is_key_down(self.control_keys.up) {
+            self.move_up(delta_time);
+        }
 
-    pub fn move_down(&mut self) {
-        self.y += 5.0;
-    }
+        if is_key_down(self.control_keys.down) {
+            self.move_down(delta_time);
+        }
 
-    pub fn get_bounds(&self) -> Rect {
-        Rect::new(self.x, self.y, self.width, self.height)
+        self.bounds.y = self.bounds.y.clamp(0.0, screen_height() - self.bounds.h);
     }
 }
