@@ -1,4 +1,4 @@
-use macroquad::{color::WHITE, shapes::draw_rectangle};
+use macroquad::{color::WHITE, math::Rect, shapes::draw_rectangle};
 
 pub struct Paddle {
     x: f32,
@@ -6,7 +6,6 @@ pub struct Paddle {
     width: f32,
     height: f32,
 }
-
 impl Paddle {
     pub fn new(x: f32, y: f32) -> Self {
         Self {
@@ -27,5 +26,9 @@ impl Paddle {
 
     pub fn move_down(&mut self) {
         self.y += 5.0;
+    }
+
+    pub fn get_bounds(&self) -> Rect {
+        Rect::new(self.x, self.y, self.width, self.height)
     }
 }
