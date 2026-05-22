@@ -1,5 +1,5 @@
 use macroquad::{
-    color::WHITE,
+    color::Color,
     input::{KeyCode, is_key_down},
     math::Rect,
     shapes::draw_rectangle,
@@ -13,6 +13,7 @@ pub struct ControlKeys {
 pub struct Paddle {
     bounds: Rect,
     control_keys: ControlKeys,
+    color: Color,
 }
 impl Paddle {
     fn move_up(&mut self, delta_time: f32) {
@@ -23,15 +24,20 @@ impl Paddle {
         self.bounds.y += 300.0 * delta_time;
     }
 
-    pub fn new(x: f32, y: f32, control_keys: ControlKeys) -> Self {
+    pub fn new(x: f32, y: f32, control_keys: ControlKeys, color: Color) -> Self {
         Self {
             bounds: Rect::new(x, y, 15.0, 80.0),
             control_keys,
+            color,
         }
     }
 
     pub fn bounds(&self) -> &Rect {
         &self.bounds
+    }
+
+    pub fn color(&self) -> Color {
+        self.color
     }
 
     pub fn draw(&self) {
@@ -40,7 +46,7 @@ impl Paddle {
             self.bounds.y,
             self.bounds.w,
             self.bounds.h,
-            WHITE,
+            self.color,
         );
     }
 
