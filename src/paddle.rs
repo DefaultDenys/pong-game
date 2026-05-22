@@ -3,7 +3,7 @@ use macroquad::{
     input::{KeyCode, is_key_down},
     math::Rect,
     shapes::draw_rectangle,
-    window::screen_height,
+    window::{screen_height, screen_width},
 };
 
 pub struct ControlKeys {
@@ -54,5 +54,10 @@ impl Paddle {
         }
 
         self.bounds.y = self.bounds.y.clamp(0.0, screen_height() - self.bounds.h);
+    }
+
+    pub fn update_if_screen_resize(&mut self, move_x: f32) {
+        self.bounds.x = move_x;
+        self.bounds.x = self.bounds.x.clamp(0.0, screen_width() - self.bounds.w);
     }
 }
